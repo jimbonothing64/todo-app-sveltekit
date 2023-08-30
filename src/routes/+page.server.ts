@@ -3,6 +3,10 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
 	return {
-		allTodoLists: await db.query.todoLists.findMany()
+		allTodoLists: await db.query.todoLists.findMany({
+			with: {
+				todos: true
+			}
+		})
 	};
 };
