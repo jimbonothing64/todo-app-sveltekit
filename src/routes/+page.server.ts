@@ -33,8 +33,6 @@ export const load: PageServerLoad = async () => {
 	};
 
 	return {
-		allTodoLists: fetchAllTodoLists(),
-		allNotes: fetchAllNotes(),
 		allTaskSlots: fetchAllTaskSlots()
 	};
 };
@@ -49,6 +47,19 @@ export const actions: Actions = {
 		console.log(todoListss);
 		console.log(todoListss.insertId);
 		await db.insert(taskSlots).values({ todo_list_id: todoListss.insertId });
+		return { success: true };
+	},
+
+	createNote: async ({ request }) => {
+		const data = await request.formData();
+		const title = data.get('title');
+		const text = data.get('text');
+		if (!title) return { success: false };
+
+		const todoListss = await db.insert(notes).values({ title, text });
+		console.log(todoListss);
+		console.log(todoListss.insertId);
+		await db.insert(taskSlots).values({ note_id: todoListss.insertId });
 		return { success: true };
 	},
 
@@ -70,15 +81,15 @@ export const actions: Actions = {
 		const deleteTodoListId = data.get('todoListId');
 
 		console.log(delteSlotId);
-		// console.log(deleteTodoListId);
-		// if (!delteSlotId) return;
-		// if (deleteTodoListId) {
-		// 	await db.delete(todos).where(eq(todos.todo_list_id, deleteTodoListId));
-		// 	await db.delete(todoLists).where(eq(todoLists.id, deleteTodoListId));
-		// }
-		// if (deleteNoteId) {
-		// 	await db.delete(notes).where(eq(notes.id, deleteNoteId));
-		// }
+		console.log(deleteTodoListId);
+		if (!delteSlotId) return;
+		if (deleteTodoListId) {
+			await db.delete(todos).where(eq(todos.todo_list_id, deleteTodoListId));
+			await db.delete(todoLists).where(eq(todoLists.id, deleteTodoListId));
+		}
+		if (deleteNoteId) {
+			await db.delete(notes).where(eq(notes.id, deleteNoteId));
+		}
 
 		await db.delete(taskSlots).where(eq(taskSlots.id, delteSlotId));
 		return { success: true };
