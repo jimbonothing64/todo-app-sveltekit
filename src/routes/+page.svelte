@@ -1,19 +1,65 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	export let data: PageData;
-	$: todoLists = data.allTodoLists;
-	console.log(data.allTodoLists);
+	$: allTaskSlots = data.allTaskSlots;
+	$: console.log(allTaskSlots);
 </script>
 
-<ul>
-	{#each todoLists as todoList}
-		<li>
-			{todoList.title}
-			<ul>
-				{#each todoList.todos as todo}
-					<li>{todo.text}</li>
-				{/each}
-			</ul>
-		</li>
+<div
+	class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+>
+	<form method="POST" action="?/createTodoList">
+		<div class="relative z-0 w-full mb-6 group">
+			<label>
+				New todo
+				<input name="title" type="text" autocomplete="off" />
+			</label>
+		</div>
+	</form>
+	<form method="POST" action="?/createTodoList">
+		<div class="relative z-0 w-full mb-6 group">
+			<label>
+				New note
+				<input name="title" type="text" autocomplete="off" />
+			</label>
+		</div>
+	</form>
+</div>
+<div class="flex flex-wrap">
+	{#each allTaskSlots as taskSlot (taskSlot.id)}
+		<div
+			class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+		>
+			{#if taskSlot.note_id}
+				<p>its a note!</p>
+			{:else if taskSlot.todo_list_id}
+				<form method="POST">
+					<h5
+						class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white capitalize"
+					>
+						{taskSlot.todoList?.title}
+					</h5>
+					<input type="hidden" name="id" value={taskSlot.id} />
+					<input type="hidden" name="todoListId" value={taskSlot.todoList?.id} />
+					<button formaction="?/deleteTaskSlot">delete</button>
+					<ul>
+						{#each taskSlot.todoList?.todos as todo (todo.id)}
+							<li>{todo.text}</li>
+						{/each}
+						<li>
+							<form action="?/createTodo" method="POST">
+								<input type="hidden" name="id" value={taskSlot.todoList?.id} />
+								<input type="text" name="text" />
+								<button>+</button>
+							</form>
+						</li>
+					</ul>
+				</form>
+
+				<!-- {/each} -->
+			{:else}
+				<p>Oh no something went horribly wrong!</p>
+			{/if}
+		</div>
 	{/each}
-</ul>
+</div>
