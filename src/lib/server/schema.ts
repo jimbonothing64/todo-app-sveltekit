@@ -1,12 +1,28 @@
 import { relations } from 'drizzle-orm';
-import { boolean, int, mysqlTable, serial, uniqueIndex, varchar } from 'drizzle-orm/mysql-core';
+import {
+	boolean,
+	index,
+	int,
+	mysqlTable,
+	serial,
+	uniqueIndex,
+	varchar
+} from 'drizzle-orm/mysql-core';
 
-export const todos = mysqlTable('todos', {
-	id: serial('id').primaryKey(),
-	text: varchar('name', { length: 256 }),
-	completed: boolean('completed').notNull().default(false),
-	todo_list_id: int('todo_list_id').notNull()
-});
+export const todos = mysqlTable(
+	'todos',
+	{
+		id: serial('id').primaryKey(),
+		text: varchar('name', { length: 256 }),
+		completed: boolean('completed').notNull().default(false),
+		todo_list_id: int('todo_list_id').notNull()
+	},
+	(table) => {
+		return {
+			todo_list_id_idx: index('todo_list_id_idx').on(table.todo_list_id)
+		};
+	}
+);
 
 export const todoLists = mysqlTable('todo_lists', {
 	id: serial('id').primaryKey(),
@@ -16,16 +32,24 @@ export const todoLists = mysqlTable('todo_lists', {
 export const notes = mysqlTable('notes', {
 	id: serial('id').primaryKey(),
 	title: varchar('title', { length: 256 }),
-	text: varchar('text', { length: 2048 }),
-	ordering: int('ordering')
+	text: varchar('text', { length: 2048 })
 });
 
-export const taskSlots = mysqlTable('task_slots', {
-	id: serial('id').primaryKey(),
-	ordering: int('ordering'),
-	todo_list_id: int('todo_list_id'),
-	note_id: int('note_id')
-});
+export const taskSlots = mysqlTable(
+	'task_slots',
+	{
+		id: serial('id').primaryKey(),
+		ordering: int('ordering'),
+		todo_list_id: int('todo_list_id'),
+		note_id: int('note_id')
+	},
+	(table) => {
+		return {
+			slot_todo_list_id_idx: index('slot_todo_list_id_idx').on(table.todo_list_id),
+			slot_note_id_idx: index('slot_note_id_idx').on(table.note_id)
+		};
+	}
+);
 
 export const todosRelations = relations(todos, ({ one }) => ({
 	todoLists: one(todoLists, {
