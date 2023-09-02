@@ -18,19 +18,23 @@
 
 	const handleAddTodo = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
-			todoList.todos = [...todoList.todos, newTodo];
-			newTodo = {
-				id: null,
-				text: '',
-				completed: false
-			};
+			if (newTodo.text !== '') {
+				todoList.todos = [...todoList.todos, newTodo];
+				newTodo = {
+					id: null,
+					text: '',
+					completed: false
+				};
+				event.preventDefault(); // Add new todo, without form submit.
+			}
+			// Form submit.
 		}
 	};
 </script>
 
 {#if showTitle}
 	<input
-		name="text"
+		name="title"
 		type="text"
 		autocomplete="off"
 		placeholder="Title"
@@ -44,7 +48,7 @@
 {/each}
 <input
 	bind:value={newTodo.text}
-	on:keydown={handleAddTodo}
+	on:keydown|capture={handleAddTodo}
 	name="text"
 	type="text"
 	autocomplete="off"

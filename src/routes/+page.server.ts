@@ -41,9 +41,13 @@ export const actions: Actions = {
 	createTodoList: async ({ request }) => {
 		const data = await request.formData();
 		const title = data.get('title');
+		const toInsert = {
+			title
+		};
+		console.log(toInsert);
 		if (!title) return { success: false };
 
-		const todoListss = await db.insert(todoLists).values({ title: title });
+		const todoListss = await db.insert(todoLists).values(toInsert);
 		console.log(todoListss);
 		console.log(todoListss.insertId);
 		await db.insert(taskSlots).values({ todo_list_id: todoListss.insertId });

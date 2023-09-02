@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Note } from '$lib/types';
-	export let newNote: Note;
+	// export let newNote: Note;
 
 	let showTitle = true;
 	let containerDiv: HTMLDivElement;

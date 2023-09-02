@@ -5,13 +5,15 @@ export interface Todo {
 }
 
 export interface TodoList {
-	id: number;
+	id: number | null;
 	title: string;
 	todos: Array<Todo>;
 }
 
 export interface Note {
-	id: number;
+	id: number | null;
 	title: string;
 	text: string;
 }
+
+export type NewSlotType = 'note' | 'todo list';

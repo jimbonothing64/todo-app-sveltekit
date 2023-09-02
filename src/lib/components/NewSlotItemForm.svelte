@@ -1,9 +1,9 @@
 <script lang="ts">
+	import type { NewSlotType } from '$lib/types';
 	import NewNoteForm from './NewNoteForm.svelte';
 	import NewTodoListForm from './NewTodoListForm.svelte';
 
-	type FormType = 'note' | 'todo list';
-	export let formType: FormType = 'note';
+	export let formType: NewSlotType;
 
 	const handleTodoListClick = () => {
 		formType = 'todo list';
@@ -31,11 +31,11 @@
 	{:else}
 		<p>Bad form type :(</p>
 	{/if}
-	<div>
+	<div class="flex justify-end">
 		{#if formType === 'note'}
 			<button
-				on:click={handleTodoListClick}
-				class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+				on:mouseup={handleTodoListClick}
+				class=" text-black dark:text-white hover:text-orange-600 focus:ring-4 focus:outline-none font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center focus:ring-transparent"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -56,8 +56,8 @@
 			</button>
 		{:else if formType === 'todo list'}
 			<button
-				on:click={handleNoteClick}
-				class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+				on:mouseup={handleNoteClick}
+				class=" text-black dark:text-white hover:text-orange-600 focus:ring-4 focus:outline-none font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center focus:ring-transparent"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@
 			</button>
 		{/if}
 		<button
-			class="justify-end m-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+			class=" text-black dark:text-white hover:text-orange-600 focus:ring-4 focus:outline-none font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center focus:ring-transparent"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
