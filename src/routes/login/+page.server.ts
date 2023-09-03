@@ -6,8 +6,7 @@ import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
-	console.log('hi');
-	if (session) throw redirect(302, '/');
+	if (session) throw redirect(302, '/app');
 	return {};
 };
 
@@ -17,7 +16,6 @@ export const actions: Actions = {
 		const username = formData.get('username');
 		const password = formData.get('password');
 		// basic check
-		console.log('h2');
 		if (typeof username !== 'string' || username.length < 1 || username.length > 31) {
 			return fail(400, {
 				message: 'Invalid username'
@@ -54,8 +52,9 @@ export const actions: Actions = {
 				message: 'An unknown error occurred'
 			});
 		}
+
 		// redirect to
 		// make sure you don't throw inside a try/catch block!
-		throw redirect(302, '/');
+		throw redirect(302, '/app');
 	}
 };

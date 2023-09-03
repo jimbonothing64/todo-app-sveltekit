@@ -16,6 +16,7 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const username = formData.get('username');
 		const password = formData.get('password');
+		const confirmPassword = formData.get('confirmpassword');
 
 		// basic check
 		if (typeof username !== 'string' || username.length < 4 || username.length > 31) {
@@ -26,6 +27,11 @@ export const actions: Actions = {
 		if (typeof password !== 'string' || password.length < 6 || password.length > 255) {
 			return fail(400, {
 				message: 'Invalid password'
+			});
+		}
+		if (password !== confirmPassword) {
+			return fail(400, {
+				message: 'Passwords do not match'
 			});
 		}
 
