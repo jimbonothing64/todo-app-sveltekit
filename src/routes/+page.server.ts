@@ -1,6 +1,7 @@
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { todoLists, todos, taskSlots, notes } from '$lib/server/schema';
+import type { NewSlotType } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -38,6 +39,29 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
+	createSlot: async ({ request }) => {
+		const data = await request.formData();
+		const title = data.get('title');
+		const type: NewSlotType = data.get('type');
+		const toInsert = {
+			title
+		};
+		console.log(toInsert);
+		console.log(data);
+		if (!title) return { success: false };
+
+		if (type === 'todo list') {
+			const todoListss = await db.insert(todoLists).values(toInsert);
+			await db.insert(taskSlots).values({ todo_list_id: todoListss.insertId });
+		} else if (type === 'note') {
+			const text = data.get('text');
+			const todoListss = await db.insert(notes).values({ title, text });
+			await db.insert(taskSlots).values({ note_id: todoListss.insertId });
+		}
+
+		return { success: true };
+	},
+
 	createTodoList: async ({ request }) => {
 		const data = await request.formData();
 		const title = data.get('title');
@@ -45,6 +69,7 @@ export const actions: Actions = {
 			title
 		};
 		console.log(toInsert);
+		console.log(data);
 		if (!title) return { success: false };
 
 		const todoListss = await db.insert(todoLists).values(toInsert);
@@ -61,8 +86,6 @@ export const actions: Actions = {
 		if (!title) return { success: false };
 
 		const todoListss = await db.insert(notes).values({ title, text });
-		console.log(todoListss);
-		console.log(todoListss.insertId);
 		await db.insert(taskSlots).values({ note_id: todoListss.insertId });
 		return { success: true };
 	},

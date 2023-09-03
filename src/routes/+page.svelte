@@ -9,8 +9,6 @@
 
 	let newSlotType: NewSlotType = 'note';
 	$: newSlotType;
-	$: console.log(allTaskSlots);
-	$: console.log(newSlotType);
 </script>
 
 <!-- <div
@@ -37,16 +35,11 @@
 </div> -->
 
 <div class="flex justify-center">
-	<form
-		use:enhance
-		method="POST"
-		action={newSlotType === 'note' ? '?/createNote' : '?/createTodoList'}
-		class="w-5/6"
-	>
-		<NewSlotItemForm bind:formType={newSlotType} />
+	<form use:enhance method="POST" action={'?/createSlot'} class="w-5/6">
+		<NewSlotItemForm />
 	</form>
 </div>
-<div class="flex pt-10 flex-wrap gap-3">
+<div class="flex pt-10 flex-wrap place-content-center gap-3 md:m-5">
 	{#each allTaskSlots as taskSlot (taskSlot.id)}
 		<div
 			class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
@@ -76,7 +69,6 @@
 					<ul>
 						{#each taskSlot.todoList?.todos as todo (todo.id)}
 							<li>
-								checkb
 								{todo.text}
 							</li>
 						{/each}

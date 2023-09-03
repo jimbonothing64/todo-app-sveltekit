@@ -3,7 +3,7 @@
 	import NewNoteForm from './NewNoteForm.svelte';
 	import NewTodoListForm from './NewTodoListForm.svelte';
 
-	export let formType: NewSlotType;
+	let formType: NewSlotType = 'note';
 
 	const handleTodoListClick = () => {
 		formType = 'todo list';
@@ -14,13 +14,7 @@
 	};
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- <div
-	bind:this={containerDiv}
-	on:mouseout={handleBlur}
-	on:blur={handleBlur}
-	class="flex flex-col dark:bg-gray-800 dark:border-gray-700 border border-gray-200 rounded-3xl shadow"
-> -->
+<input type="hidden" name="type" value={formType} />
 <div
 	class="flex flex-col dark:bg-gray-800 dark:border-gray-700 border border-gray-200 rounded-3xl shadow"
 >
