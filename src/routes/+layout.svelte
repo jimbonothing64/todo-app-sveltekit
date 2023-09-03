@@ -11,7 +11,7 @@ backdrop-blur-sm shadow-sm w-full
 fixed top-0 left-0 right-0 z-10"
 >
 	<!-- Logo Container -->
-	<a class="flex" href="/">
+	<a class="flex" href="/app">
 		<!-- Logo -->
 
 		<h3 class="flex text-2xl font-bold text-orange-500 gap-1">
@@ -57,7 +57,7 @@ fixed top-0 left-0 right-0 z-10"
 				href="/login"
 				class="flex text-gray-600
 		cursor-pointer transition-colors duration-300
-		font-semibold text-blue-600"
+		font-semibold"
 			>
 				<svg
 					class="fill-current h-5 w-5 mr-2 mt-0.5"
@@ -81,7 +81,7 @@ fixed top-0 left-0 right-0 z-10"
 				<button
 					class="flex text-gray-600
 			cursor-pointer transition-colors duration-300
-			font-semibold text-blue-600"
+			font-semibold"
 				>
 					<svg
 						class="fill-current h-5 w-5 mr-2 mt-0.5"

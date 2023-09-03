@@ -1,5 +1,5 @@
 import { auth } from '$lib/server/lucia';
-import { redirect } from '@sveltejs/kit';
+import { redirect, fail } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ locals }) => {
