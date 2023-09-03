@@ -1,17 +1,12 @@
 <script lang="ts">
 	import type { Todo, TodoList } from '$lib/types';
 	import TodoItem from '$lib/components/TodoItem.svelte';
+	import { onMount } from 'svelte';
 	export let showTitle = true;
-	export let todoList: TodoList = {
-		id: 1,
-		title: 'My title',
-		todos: [
-			{ id: 1, text: 'hello', completed: false },
-			{ id: 2, text: 'goodbye', completed: true }
-		]
-	};
+	let todos: Array<Todo> = [];
 	let newTodo: Todo = {
 		id: null,
+		ordering: todos.length,
 		text: '',
 		completed: false
 	};
@@ -19,9 +14,10 @@
 	const handleAddTodo = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			if (newTodo.text !== '') {
-				todoList.todos = [...todoList.todos, newTodo];
+				todos = [...todos, newTodo];
 				newTodo = {
 					id: null,
+					ordering: todos.length,
 					text: '',
 					completed: false
 				};
@@ -30,6 +26,15 @@
 			// Form submit.
 		}
 	};
+	onMount(() => {
+		newTodo = {
+			id: null,
+			ordering: todos.length,
+			text: '',
+			completed: false
+		};
+		todos = [];
+	});
 </script>
 
 {#if showTitle}
@@ -41,17 +46,25 @@
 		class="pt-4 px-4 focus:outline-none text-2xl rounded-3xl font-bold tracking-tight"
 	/>
 {/if}
-{#each todoList.todos as todo}
-	<ul>
+<ul class="p-4">
+	{#each todos as todo}
 		<TodoItem bind:todo />
-	</ul>
-{/each}
-<input
-	bind:value={newTodo.text}
-	on:keydown|capture={handleAddTodo}
-	name="text"
-	type="text"
-	autocomplete="off"
-	placeholder="Todo item..."
-	class="p-4 focus:outline-none rounded-3xl"
-/>
+	{/each}
+	<li>
+		<input
+			bind:value={newTodo.completed}
+			name="todo.{newTodo.ordering}.completed"
+			class="text-green-600"
+			type="checkbox"
+		/>
+		<input
+			bind:value={newTodo.text}
+			on:keydown|capture={handleAddTodo}
+			name="text"
+			type="text"
+			autocomplete="off"
+			placeholder="Todo item..."
+			class=" px-1 focus:outline-none rounded-3xl"
+		/>
+	</li>
+</ul>

@@ -46,7 +46,7 @@
 					/>
 				</svg>
 
-				<span class="sr-only">Todo </span>
+				<span class="sr-only">Make todo list</span>
 			</button>
 		{:else if formType === 'todo list'}
 			<button
@@ -68,7 +68,7 @@
 					/>
 				</svg>
 
-				<span class="sr-only">Todo </span>
+				<span class="sr-only">Make note</span>
 			</button>
 		{/if}
 		<button

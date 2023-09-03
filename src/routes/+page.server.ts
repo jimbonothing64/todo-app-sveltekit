@@ -1,7 +1,7 @@
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { todoLists, todos, taskSlots, notes } from '$lib/server/schema';
-import type { NewSlotType } from '$lib/types';
+import type { NewSlotType, Todo } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -41,22 +41,42 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
 	createSlot: async ({ request }) => {
 		const data = await request.formData();
+		console.log(data.keys());
 		const title = data.get('title');
-		const type: NewSlotType = data.get('type');
+		const type: NewSlotType = data.get('type') || 'note';
 		const toInsert = {
 			title
 		};
-		console.log(toInsert);
-		console.log(data);
 		if (!title) return { success: false };
 
 		if (type === 'todo list') {
-			const todoListss = await db.insert(todoLists).values(toInsert);
-			await db.insert(taskSlots).values({ todo_list_id: todoListss.insertId });
+			const newTodoLists = await db.insert(todoLists).values(toInsert);
+			const newTodoListid = newTodoLists.insertId;
+
+			const newTodos = {};
+			for (const key of data.keys()) {
+				if (key.startsWith('todo.')) {
+					const [_, ordering, type] = key.split('.');
+					if (!newTodos[ordering]) {
+						newTodos[ordering] = { ordering, todo_list_id: newTodoListid };
+					}
+					if (type == 'completed') {
+						newTodos[ordering][type] = data.get(key) === 'true' ? true : false;
+					} else {
+						if (data.get(key)) {
+							newTodos[ordering][type] = data.get(key);
+						}
+					}
+				}
+			}
+			const insertTodos = Object.values(newTodos);
+			await db.insert(todos).values(insertTodos);
+
+			await db.insert(taskSlots).values({ todo_list_id: newTodoListid });
 		} else if (type === 'note') {
 			const text = data.get('text');
-			const todoListss = await db.insert(notes).values({ title, text });
-			await db.insert(taskSlots).values({ note_id: todoListss.insertId });
+			const newNotes = await db.insert(notes).values({ title, text });
+			await db.insert(taskSlots).values({ note_id: newNotes.insertId });
 		}
 
 		return { success: true };
