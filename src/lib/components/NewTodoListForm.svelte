@@ -3,7 +3,7 @@
 	import TodoItem from '$lib/components/TodoItem.svelte';
 	import { onMount } from 'svelte';
 	export let showTitle = true;
-	let todos: Array<Todo> = [];
+	export let todos: Array<Todo> = [];
 	let newTodo: Todo = {
 		id: null,
 		ordering: todos.length,
@@ -26,15 +26,6 @@
 			// Form submit.
 		}
 	};
-	onMount(() => {
-		newTodo = {
-			id: null,
-			ordering: todos.length,
-			text: '',
-			completed: false
-		};
-		todos = [];
-	});
 </script>
 
 {#if showTitle}

@@ -8,7 +8,7 @@ backdrop-blur-sm shadow-sm w-full
 fixed top-0 left-0 right-0 z-10"
 >
 	<!-- Logo Container -->
-	<div class="flex">
+	<a class="flex" href="/">
 		<!-- Logo -->
 
 		<h3 class="flex text-2xl font-bold text-orange-500 gap-1">
@@ -23,14 +23,14 @@ fixed top-0 left-0 right-0 z-10"
 
 			Keeper
 		</h3>
-	</div>
+	</a>
 
 	<!-- Icon Menu Section -->
 	<div class="flex items-center space-x-5">
 		<!-- Register -->
 		<a
-			class="flex text-gray-600 hover:text-blue-500
-		cursor-pointer transition-colors duration-300"
+			href="/register"
+			class="flex text-gray-600 hover:text-blue-500 cursor-pointer transition-colors duration-300"
 		>
 			<svg
 				class="fill-current h-5 w-5 mr-2 mt-0.5"
@@ -50,6 +50,7 @@ fixed top-0 left-0 right-0 z-10"
 
 		<!-- Login -->
 		<a
+			href="/login"
 			class="flex text-gray-600
 		cursor-pointer transition-colors duration-300
 		font-semibold text-blue-600"

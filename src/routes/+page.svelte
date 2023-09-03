@@ -6,9 +6,6 @@
 	import TodoItem from '$lib/components/TodoItem.svelte';
 	export let data: PageData;
 	$: allTaskSlots = data.allTaskSlots;
-
-	let newSlotType: NewSlotType = 'note';
-	$: newSlotType;
 </script>
 
 <!-- <div

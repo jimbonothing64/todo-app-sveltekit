@@ -4,7 +4,10 @@ import { todoLists, todos, taskSlots, notes } from '$lib/server/schema';
 import type { NewSlotType, Todo } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+	const session = await locals.auth.validate();
+	if (!session) throw redirect(302, '/login');
+
 	const fetchAllTodoLists = async () => {
 		const allTodoLists = await db.query.todoLists.findMany({
 			with: {
@@ -34,6 +37,8 @@ export const load: PageServerLoad = async () => {
 	};
 
 	return {
+		userId: session.user.userId,
+		username: session.user.username,
 		allTaskSlots: fetchAllTaskSlots()
 	};
 };
