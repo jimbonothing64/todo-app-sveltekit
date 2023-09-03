@@ -3,7 +3,9 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			auth: import('lucia-auth').AuthRequest;
+		}
 		// interface PageData {}
 		// interface Platform {}
 	}

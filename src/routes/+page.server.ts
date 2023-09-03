@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm';
 import { todoLists, todos, taskSlots, notes } from '$lib/server/schema';
 import type { NewSlotType, Todo } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
+import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();

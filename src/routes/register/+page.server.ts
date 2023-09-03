@@ -16,7 +16,7 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const username = formData.get('username');
 		const password = formData.get('password');
-		console.log('gh');
+
 		// basic check
 		if (typeof username !== 'string' || username.length < 4 || username.length > 31) {
 			return fail(400, {
@@ -28,7 +28,7 @@ export const actions: Actions = {
 				message: 'Invalid password'
 			});
 		}
-		console.log('h');
+
 		try {
 			const user = await auth.createUser({
 				key: {
@@ -40,16 +40,11 @@ export const actions: Actions = {
 					username
 				}
 			});
-			const session = await auth.createSession({
-				userId: user.userId,
-				attributes: {}
-			});
-			locals.auth.setSession(session); // set session cookie
 		} catch (e) {
 			// this part depends on the database you're using
 			// check for unique constraint error in user table
 			// TODO FIX
-			console.log(e.message);
+
 			if (e instanceof DatabaseError && e.message === 'AUTH_DUPLICATE_KEY_ID') {
 				return fail(400, {
 					message: 'Username already taken'
@@ -61,6 +56,6 @@ export const actions: Actions = {
 		}
 		// redirect to
 		// make sure you don't throw inside a try/catch block!
-		throw redirect(302, '/');
+		throw redirect(302, '/login');
 	}
 };
