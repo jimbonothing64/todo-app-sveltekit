@@ -51,7 +51,6 @@ export const actions: Actions = {
 		const session = await locals.auth.validate();
 		if (!session) throw redirect(302, '/login');
 		const userId = session.user.userId;
-		console.log(userId);
 
 		const data = await request.formData();
 		const title = data.get('title');
@@ -158,7 +157,6 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const text = data.get('text');
 		const todoListId = data.get('id');
-		console.log(text, todoListId);
 		if (text !== '') {
 			await db.insert(todos).values({ text: text, todo_list_id: todoListId });
 			return { success: true };

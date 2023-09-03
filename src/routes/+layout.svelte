@@ -81,8 +81,9 @@ fixed top-0 left-0 right-0 z-10"
 				<button
 					class="flex text-gray-600
 			cursor-pointer transition-colors duration-300
-			font-semibold"
+			font-semibold capitalize gap-2"
 				>
+					{data.username}
 					<svg
 						class="fill-current h-5 w-5 mr-2 mt-0.5"
 						xmlns="http://www.w3.org/2000/svg"
@@ -96,8 +97,6 @@ fixed top-0 left-0 right-0 z-10"
 							d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z"
 						/>
 					</svg>
-
-					Logout
 				</button>
 			</form>
 		{/if}
