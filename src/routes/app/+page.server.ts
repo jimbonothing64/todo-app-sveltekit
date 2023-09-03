@@ -8,6 +8,7 @@ import { redirect } from '@sveltejs/kit';
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
 	if (!session) throw redirect(302, '/login');
+	const userId = session.user.userId;
 
 	const fetchAllTodoLists = async () => {
 		const allTodoLists = await db.query.todoLists.findMany({
@@ -32,7 +33,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 					}
 				},
 				note: true
-			}
+			},
+			where: (taskSlots, { eq }) => eq(taskSlots.user_id, userId)
 		});
 		return allTodoLists;
 	};
@@ -45,9 +47,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	createSlot: async ({ request }) => {
+	createSlot: async ({ request, locals }) => {
+		const session = await locals.auth.validate();
+		if (!session) throw redirect(302, '/login');
+		const userId = session.user.userId;
+		console.log(userId);
+
 		const data = await request.formData();
-		console.log(data.keys());
 		const title = data.get('title');
 		const type: NewSlotType = data.get('type') || 'note';
 		const toInsert = {
@@ -78,11 +84,11 @@ export const actions: Actions = {
 			const insertTodos = Object.values(newTodos);
 			await db.insert(todos).values(insertTodos);
 
-			await db.insert(taskSlots).values({ todo_list_id: newTodoListid });
+			await db.insert(taskSlots).values({ todo_list_id: newTodoListid, user_id: userId });
 		} else if (type === 'note') {
 			const text = data.get('text');
 			const newNotes = await db.insert(notes).values({ title, text });
-			await db.insert(taskSlots).values({ note_id: newNotes.insertId });
+			await db.insert(taskSlots).values({ note_id: newNotes.insertId, user_id: userId });
 		}
 
 		return { success: true };

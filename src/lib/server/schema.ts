@@ -44,6 +44,9 @@ export const taskSlots = mysqlTable(
 		ordering: int('ordering'),
 		todo_list_id: int('todo_list_id'),
 		note_id: int('note_id'),
+		user_id: varchar('user_id', {
+			length: 15
+		}).notNull(),
 		archived: boolean('archived').notNull().default(false)
 	},
 	(table) => {
@@ -53,28 +56,6 @@ export const taskSlots = mysqlTable(
 		};
 	}
 );
-
-export const todosRelations = relations(todos, ({ one }) => ({
-	todoLists: one(todoLists, {
-		fields: [todos.todo_list_id],
-		references: [todoLists.id]
-	})
-}));
-
-export const todoListsRelations = relations(todoLists, ({ many }) => ({
-	todos: many(todos)
-}));
-
-export const taskSlotsRelations = relations(taskSlots, ({ one }) => ({
-	todoList: one(todoLists, {
-		fields: [taskSlots.todo_list_id],
-		references: [todoLists.id]
-	}),
-	note: one(notes, {
-		fields: [taskSlots.note_id],
-		references: [notes.id]
-	})
-}));
 
 // Lucia tables
 export const user = mysqlTable('auth_user', {
@@ -110,3 +91,33 @@ export const session = mysqlTable('user_session', {
 		mode: 'number'
 	}).notNull()
 });
+
+export const todosRelations = relations(todos, ({ one }) => ({
+	todoLists: one(todoLists, {
+		fields: [todos.todo_list_id],
+		references: [todoLists.id]
+	})
+}));
+
+export const todoListsRelations = relations(todoLists, ({ many }) => ({
+	todos: many(todos)
+}));
+
+export const taskSlotsRelations = relations(taskSlots, ({ one }) => ({
+	todoList: one(todoLists, {
+		fields: [taskSlots.todo_list_id],
+		references: [todoLists.id]
+	}),
+	note: one(notes, {
+		fields: [taskSlots.note_id],
+		references: [notes.id]
+	}),
+	user: one(user, {
+		fields: [taskSlots.user_id],
+		references: [user.id]
+	})
+}));
+
+export const userRelations = relations(user, ({ many }) => ({
+	taskSlots: many(taskSlots)
+}));
