@@ -99,13 +99,9 @@ export const actions: Actions = {
 		const toInsert = {
 			title
 		};
-		console.log(toInsert);
-		console.log(data);
 		if (!title) return { success: false };
 
 		const todoListss = await db.insert(todoLists).values(toInsert);
-		console.log(todoListss);
-		console.log(todoListss.insertId);
 		await db.insert(taskSlots).values({ todo_list_id: todoListss.insertId });
 		return { success: true };
 	},
@@ -124,10 +120,9 @@ export const actions: Actions = {
 	deleteTodoList: async ({ request }) => {
 		const data = await request.formData();
 		const delteId = data.get('id');
-		console.log(delteId);
 		if (!delteId) return;
 
-		await db.delete(todos).where(eq(todo.todo_list_id, delteId));
+		await db.delete(todos).where(eq(todos.todo_list_id, delteId));
 		await db.delete(todoLists).where(eq(todoLists.id, delteId));
 		return { success: true };
 	},
@@ -138,8 +133,6 @@ export const actions: Actions = {
 		const deleteNoteId = data.get('noteId');
 		const deleteTodoListId = data.get('todoListId');
 
-		console.log(delteSlotId);
-		console.log(deleteTodoListId);
 		if (!delteSlotId) return;
 		if (deleteTodoListId) {
 			await db.delete(todos).where(eq(todos.todo_list_id, deleteTodoListId));

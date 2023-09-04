@@ -1,6 +1,8 @@
 import { auth } from '$lib/server/lucia';
 import { LuciaError } from 'lucia';
 import { fail, redirect } from '@sveltejs/kit';
+import { loginFormSchema } from '$lib/validate';
+import { registerFormSchema } from '$lib/validate';
 
 import type { PageServerLoad, Actions } from './$types';
 
@@ -13,31 +15,26 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const formData = await request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
-		// basic check
-		if (typeof username !== 'string' || username.length < 1 || username.length > 31) {
-			return fail(400, {
-				message: 'Invalid username'
-			});
+		const result = loginFormSchema.safeParse(formData);
+
+		if (!result.success) {
+			const data = {
+				fieldErrors: result.error.flatten().fieldErrors
+			};
+			return fail(400, data);
 		}
-		if (typeof password !== 'string' || password.length < 1 || password.length > 255) {
-			return fail(400, {
-				message: 'Invalid password'
-			});
-		}
+
+		const { username, password } = result.data;
 		try {
-			console.log('h3');
 			// find user by key
 			// and validate password
-			const key = await auth.useKey('username', username.toLowerCase(), password);
+			const key = await auth.useKey('username', username, password);
 			const session = await auth.createSession({
 				userId: key.userId,
 				attributes: {}
 			});
 			locals.auth.setSession(session); // set session cookie
 		} catch (e) {
-			console.log(e);
 			if (
 				e instanceof LuciaError &&
 				(e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD')
@@ -45,11 +42,11 @@ export const actions: Actions = {
 				// user does not exist
 				// or invalid password
 				return fail(400, {
-					message: 'Incorrect username or password'
+					formErrors: ['Incorrect username or password.']
 				});
 			}
 			return fail(500, {
-				message: 'An unknown error occurred'
+				formErrors: ['An unknown error occurred.']
 			});
 		}
 
