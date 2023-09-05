@@ -2,7 +2,7 @@
 	import type { Note } from '$lib/types';
 	// export let newNote: Note;
 
-	let showTitle = true;
+	let showTitle = false;
 	let containerDiv: HTMLDivElement;
 
 	const handleFocus = () => {

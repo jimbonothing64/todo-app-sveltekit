@@ -2,7 +2,6 @@ import { auth } from '$lib/server/lucia';
 import { LuciaError } from 'lucia';
 import { fail, redirect } from '@sveltejs/kit';
 import { loginFormSchema } from '$lib/validate';
-import { registerFormSchema } from '$lib/validate';
 
 import type { PageServerLoad, Actions } from './$types';
 

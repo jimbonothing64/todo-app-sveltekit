@@ -4,6 +4,7 @@ import { todoLists, todos, taskSlots, notes } from '$lib/server/schema';
 import type { NewSlotType, Todo } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
+import { deleteSlot } from '$lib/server/taskSlot.db';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -72,7 +73,8 @@ export const actions: Actions = {
 						newTodos[ordering] = { ordering, todo_list_id: newTodoListid };
 					}
 					if (type == 'completed') {
-						newTodos[ordering][type] = data.get(key) === 'true' ? true : false;
+						console.log(data.get(key));
+						newTodos[ordering][type] = data.get(key) === 'on' ? true : false;
 					} else {
 						if (data.get(key)) {
 							newTodos[ordering][type] = data.get(key);
@@ -127,23 +129,18 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	deleteTaskSlot: async ({ request }) => {
+	deleteTaskSlot: async ({ request, locals }) => {
+		const session = await locals.auth.validate();
+		if (!session) throw redirect(302, '/login');
+		const userId = session.user.userId;
+
 		const data = await request.formData();
 		const delteSlotId = data.get('id');
 		const deleteNoteId = data.get('noteId');
 		const deleteTodoListId = data.get('todoListId');
 
-		if (!delteSlotId) return;
-		if (deleteTodoListId) {
-			await db.delete(todos).where(eq(todos.todo_list_id, deleteTodoListId));
-			await db.delete(todoLists).where(eq(todoLists.id, deleteTodoListId));
-		}
-		if (deleteNoteId) {
-			await db.delete(notes).where(eq(notes.id, deleteNoteId));
-		}
-
-		await db.delete(taskSlots).where(eq(taskSlots.id, delteSlotId));
-		return { success: true };
+		const success = await deleteSlot(delteSlotId, deleteNoteId, deleteTodoListId, userId);
+		return { success };
 	},
 
 	createTodo: async ({ request }) => {

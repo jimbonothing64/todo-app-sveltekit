@@ -7,7 +7,7 @@
 	<input bind:value={todo.id} name="todo.{todo.ordering}.id" type="hidden" />
 	<input bind:value={todo.ordering} name="todo.{todo.ordering}.ordering" type="hidden" />
 	<input
-		bind:value={todo.completed}
+		bind:checked={todo.completed}
 		name="todo.{todo.ordering}.completed"
 		class="text-green-600"
 		type="checkbox"
