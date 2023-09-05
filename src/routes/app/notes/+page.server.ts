@@ -20,7 +20,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		});
 		return allNotes;
 	};
-	console.log('hi');
 	return {
 		// userId: session.user.userId,
 		// username: session.user.username,
@@ -84,10 +83,8 @@ export const actions: Actions = {
 		const { slotId, noteId, ...rest } = Object.fromEntries(data);
 		const canMutate = userCanMutate(slotId, userId);
 		if (!canMutate) {
-			console.log('wrong user');
 			return { message: 'Can only delete own notes!' };
 		}
-		console.log(rest);
 		const result = await db.update(notes).set(rest).where(eq(notes.id, noteId));
 		const success = !!result;
 		return { success };

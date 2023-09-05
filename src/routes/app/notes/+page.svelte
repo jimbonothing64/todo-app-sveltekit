@@ -14,11 +14,10 @@
 	const handleNoteClick = (slot) => {
 		editing = 'editing';
 		editingtaskSlot = slot;
-		console.log(slot);
 	};
 
 	const handledExitEdit = () => {
-		editForm?.submit();
+		editForm?.requestSubmit();
 		editing = null;
 		editingtaskSlot = {};
 	};

@@ -23,7 +23,5 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 export const actions: Actions = {
 	updateNote: async ({ locals, request }) => {},
-	deleteNote: async ({ locals, request }) => {
-		console.log('hi');
-	}
+	deleteNote: async ({ locals, request }) => {}
 };

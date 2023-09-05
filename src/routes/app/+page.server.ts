@@ -73,7 +73,6 @@ export const actions: Actions = {
 						newTodos[ordering] = { ordering, todo_list_id: newTodoListid };
 					}
 					if (type == 'completed') {
-						console.log(data.get(key));
 						newTodos[ordering][type] = data.get(key) === 'on' ? true : false;
 					} else {
 						if (data.get(key)) {
