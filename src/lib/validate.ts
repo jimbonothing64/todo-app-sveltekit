@@ -39,5 +39,13 @@ const registerSchema = z
 		}
 	});
 
+export const noteSlotFormSchema = zfd.formData({
+	slotId: zfd.numeric(),
+	noteId: zfd.numeric(),
+	title: zfd.text(z.string().min(0)),
+	text: zfd.text(z.string().min(1, { message: 'Note cannot be empty' })),
+	archived: zfd.checkbox()
+});
+
 export const loginFormSchema = zfd.formData(loginSchema);
 export const registerFormSchema = zfd.formData(registerSchema);
