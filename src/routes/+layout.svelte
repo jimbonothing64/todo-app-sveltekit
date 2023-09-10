@@ -103,6 +103,5 @@ fixed top-0 left-0 right-0 z-10"
 	</div>
 </nav>
 
-<div class="div pt-24">
-	<slot />
-</div>
+<div class="pt-24" />
+<slot />
