@@ -3,12 +3,16 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	export let data: PageData;
+
 	type editState = 'editing' | 'loading' | null;
+
 	let editingtaskSlot = {};
 	let editForm: HTMLFormElement | undefined;
 	let editNoteInput: HTMLInputElement | undefined;
-	$: allTaskSlots = data.allTaskSlots;
 	let editing: editState = null;
+
+	$: allCurrent = data.allCurrent;
+	$: allArchived = data.allArchived;
 
 	const handleNoteClick = async (slot) => {
 		editing = 'editing';
@@ -29,7 +33,7 @@
 	</form>
 </div>
 <div class="flex pt-10 flex-wrap place-content-center gap-3 md:m-5">
-	{#each allTaskSlots as taskSlot (taskSlot.id)}
+	{#each allCurrent as taskSlot (taskSlot.id)}
 		{#if taskSlot.note_id}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-interactive-supports-focus -->
@@ -40,9 +44,7 @@
 			>
 				<form use:enhance method="POST">
 					<div class="flex flex-row justify-between">
-						<h5
-							class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white capitalize"
-						>
+						<h5 class="mb-2 text-2xl font-bold tracking-tight dark:text-white capitalize">
 							{taskSlot.note?.title}
 						</h5>
 					</div>
@@ -53,6 +55,30 @@
 			</div>
 		{/if}
 	{/each}
+
+	{#each allArchived as taskSlot (taskSlot.id)}
+		{#if taskSlot.note_id}
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-interactive-supports-focus -->
+			<div
+				on:click={() => handleNoteClick(taskSlot)}
+				role="button"
+				class="max-w-sm p-6 break-words hyphens-auto text-gray-500 bg-white border cursor-pointer border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+			>
+				<form use:enhance method="POST">
+					<div class="flex flex-row justify-between">
+						<h5 class="mb-2 text-2xl font-bold tracking-tight dark:text-white capitalize">
+							{taskSlot.note?.title}
+						</h5>
+					</div>
+					<p class="whitespace-pre-wrap">{taskSlot.note?.text}</p>
+					<input type="hidden" name="id" value={taskSlot.id} />
+					<input type="hidden" name="noteId" value={taskSlot.note?.id} />
+				</form>
+			</div>
+		{/if}
+	{/each}
+
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	{#if editing && editingtaskSlot}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -83,8 +109,8 @@
 					/>
 					<input type="hidden" name="slotId" value={editingtaskSlot.id} />
 					<input type="hidden" name="noteId" value={editingtaskSlot.note?.id} />
-					<div class="flex flex-row justify-end">
-						<div class="flex">
+					<div class="flex flex-row justify-between">
+						<div class="flex rounded-xl hover:bg-gray-300 p-2">
 							<input
 								bind:checked={editingtaskSlot.archived}
 								type="checkbox"
@@ -95,7 +121,7 @@
 								xmlns="http://www.w3.org/2000/svg"
 								viewBox="0 0 24 24"
 								fill="grey"
-								class="absolute w-6 h-6 peer-checked:!fill-black"
+								class="absolute w-6 h-6 rounded peer-checked:fill-black"
 							>
 								<path
 									d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375z"
@@ -107,6 +133,10 @@
 								/>
 							</svg>
 						</div>
+						<button
+							on:click={() => handledExitEdit()}
+							class="font-bold rounded-lg hover:bg-gray-300 p-2">close</button
+						>
 					</div>
 				</form>
 			</div>

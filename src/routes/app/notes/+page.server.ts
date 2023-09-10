@@ -1,11 +1,15 @@
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
-import { todoLists, todos, taskSlots, notes } from '$lib/server/schema';
-import type { NewSlotType, Todo } from '$lib/types';
+import { taskSlots, notes } from '$lib/server/schema';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
-import { deleteSlot, userCanMutate } from '$lib/server/taskSlot.db';
+import {
+	deleteSlot,
+	getAllArchivedSlots,
+	getAllCurrentSlots,
+	userCanMutate
+} from '$lib/server/taskSlot.db';
 import { noteSlotFormSchema } from '$lib/validate';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -13,19 +17,21 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!session) throw redirect(302, '/login');
 	const userId = session.user.userId;
 
-	const fetchAllNotes = async () => {
-		const allNotes = await db.query.taskSlots.findMany({
-			with: {
-				note: true
-			},
-			where: (taskSlots, { eq }) => eq(taskSlots.user_id, userId)
-		});
+	const fetchAllCurrentNotes = async () => {
+		const allNotes = await getAllCurrentSlots(userId, 'notes');
 		return allNotes;
 	};
+
+	const fetchAllArchivedNotes = async () => {
+		const allNotes = await getAllArchivedSlots(userId, 'notes');
+		return allNotes;
+	};
+
 	return {
 		// userId: session.user.userId,
 		// username: session.user.username,
-		allTaskSlots: fetchAllNotes()
+		allCurrent: fetchAllCurrentNotes(),
+		allArchived: fetchAllArchivedNotes()
 	};
 };
 
