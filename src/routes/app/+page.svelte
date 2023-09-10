@@ -17,7 +17,7 @@
 		{#if taskSlot.note_id}
 			<a
 				href={`/app/notes/${taskSlot.note_id}`}
-				class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+				class="max-w-sm p-6 break-words hyphens-auto bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
 			>
 				<form use:enhance method="POST">
 					<div class="flex flex-row justify-between">
@@ -27,7 +27,7 @@
 							{taskSlot.note?.title}
 						</h5>
 					</div>
-					<p>{taskSlot.note?.text}</p>
+					<p class="whitespace-pre-wrap">{taskSlot.note?.text}</p>
 					<input type="hidden" name="id" value={taskSlot.id} />
 					<input type="hidden" name="noteId" value={taskSlot.note?.id} />
 				</form>

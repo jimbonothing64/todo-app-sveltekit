@@ -1,4 +1,4 @@
-<aside class="flex fixed h-full z-40">
+<aside class="flex fixed h-full">
 	<div class="flex flex-col left gap-5 px-3 h-full">
 		<a class="flex flex-row gap-3 group" href="/app">
 			<svg
