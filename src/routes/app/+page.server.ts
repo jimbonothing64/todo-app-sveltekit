@@ -5,6 +5,7 @@ import type { NewSlotType, Todo } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
 import { deleteSlot, getAllArchivedSlots, getAllCurrentSlots } from '$lib/server/taskSlot.db';
+import { parse } from '$lib/todolist.db';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -22,8 +23,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 	};
 
 	return {
-		userId: session.user.userId,
-		username: session.user.username,
 		allCurrent: fetchAllCurrentSlots(),
 		allArchived: fetchAllArchivedSlots()
 	};
@@ -47,23 +46,8 @@ export const actions: Actions = {
 			const newTodoLists = await db.insert(todoLists).values(toInsert);
 			const newTodoListid = newTodoLists.insertId;
 
-			const newTodos = {};
-			for (const key of data.keys()) {
-				if (key.startsWith('todo.')) {
-					const [_, ordering, type] = key.split('.');
-					if (!newTodos[ordering]) {
-						newTodos[ordering] = { ordering, todo_list_id: newTodoListid };
-					}
-					if (type == 'completed') {
-						newTodos[ordering][type] = data.get(key) === 'on' ? true : false;
-					} else {
-						if (data.get(key)) {
-							newTodos[ordering][type] = data.get(key);
-						}
-					}
-				}
-			}
-			const insertTodos = Object.values(newTodos);
+			const insertTodos = parse(data, newTodoListid);
+
 			await db.insert(todos).values(insertTodos);
 
 			await db.insert(taskSlots).values({ todo_list_id: newTodoListid, user_id: userId });

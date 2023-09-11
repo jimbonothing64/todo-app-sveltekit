@@ -1,5 +1,5 @@
 <script lang="ts">
-	import NewSlotItemForm from '$lib/components/NewSlotItemForm.svelte';
+	import NewSlotItemForm from '$lib/components/slots/NewSlotItemForm.svelte';
 	import SlotCard from '$lib/components/slots/SlotCard.svelte';
 	import ArchivedSlotCard from '$lib/components/slots/ArchivedSlotCard.svelte';
 	import { enhance } from '$app/forms';

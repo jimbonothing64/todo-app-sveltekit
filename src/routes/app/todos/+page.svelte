@@ -1,10 +1,12 @@
 <script lang="ts">
-	import NewSlotItemForm from '$lib/components/NewSlotItemForm.svelte';
+	import NewSlotItemForm from '$lib/components/slots/NewSlotItemForm.svelte';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import SlotCard from '$lib/components/slots/SlotCard.svelte';
 	import ArchivedSlotCard from '$lib/components/slots/ArchivedSlotCard.svelte';
 	import TodoListContents from '$lib/components/todo-list/TodoListContents.svelte';
+	import TodoItem from '$lib/components/todo-list/TodoItem.svelte';
+	import NewTodoListForm from '$lib/components/todo-list/NewTodoListForm.svelte';
 	export let data: PageData;
 
 	type editState = 'editing' | 'loading' | null;
@@ -51,7 +53,6 @@
 		</ArchivedSlotCard>
 	{/each}
 
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	{#if editing && editingtaskSlot}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -73,15 +74,14 @@
 							class=" focus:outline-none text-2xl rounded-3xl font-bold tracking-tight"
 						/>
 					</div>
-					<textarea
-						bind:this={editNoteInput}
-						bind:value={editingtaskSlot.todoList.text}
-						use:focus
-						name="text"
-						class="focus:outline-none rounded-3xl resize-none w-full h-72 md:h-96"
-					/>
+					<ul>
+						<!-- {#each editingtaskSlot.todoList.todos as todo}
+							<li><TodoItem {...todo} /></li>
+						{/each} -->
+						<NewTodoListForm bind:todos={editingtaskSlot.todoList.todos} showTitle={false} />
+					</ul>
 					<input type="hidden" name="slotId" value={editingtaskSlot.id} />
-					<input type="hidden" name="noteId" value={editingtaskSlot.todoList?.id} />
+					<input type="hidden" name="todoId" value={editingtaskSlot.todoList?.id} />
 					<div class="flex flex-row justify-between">
 						<div class="flex rounded-xl hover:bg-gray-300 p-2">
 							<input

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Todo, TodoList } from '$lib/types';
-	import TodoItem from '$lib/components/TodoItem.svelte';
-	import { onMount } from 'svelte';
+	import TodoItem from '$lib/components/todo-list/TodoItem.svelte';
 	export let showTitle = true;
 	export let todos: Array<Todo> = [];
 	let newTodo: Todo = {
@@ -39,7 +38,7 @@
 {/if}
 <ul class="p-4">
 	{#each todos as todo}
-		<TodoItem bind:todo />
+		<li><TodoItem {...todo} /></li>
 	{/each}
 	<li>
 		<input

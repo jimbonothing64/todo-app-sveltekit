@@ -14,7 +14,13 @@
 <ul>
 	{#each todos as todo}
 		<li>
-			<input on:click|stopPropagation name="completed" class="text-green-600" type="checkbox" />
+			<input
+				on:click|stopPropagation
+				bind:checked={todo.completed}
+				name="completed"
+				class="text-green-600"
+				type="checkbox"
+			/>
 			{todo.text}
 		</li>
 	{/each}

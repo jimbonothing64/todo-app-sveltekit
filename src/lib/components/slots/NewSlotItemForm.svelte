@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { NewSlotType } from '$lib/types';
-	import NewNoteForm from './NewNoteForm.svelte';
-	import NewTodoListForm from './NewTodoListForm.svelte';
+	import NewNoteForm from '../NewNoteForm.svelte';
+	import NewTodoListForm from '../todo-list/NewTodoListForm.svelte';
 
 	let formType: NewSlotType = 'note';
 
