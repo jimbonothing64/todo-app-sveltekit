@@ -4,46 +4,28 @@ import { todoLists, todos, taskSlots, notes } from '$lib/server/schema';
 import type { NewSlotType, Todo } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
-import { deleteSlot } from '$lib/server/taskSlot.db';
+import { deleteSlot, getAllArchivedSlots, getAllCurrentSlots } from '$lib/server/taskSlot.db';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
 	if (!session) throw redirect(302, '/login');
 	const userId = session.user.userId;
 
-	const fetchAllTodoLists = async () => {
-		const allTodoLists = await db.query.todoLists.findMany({
-			with: {
-				todos: true
-			}
-		});
-		return allTodoLists;
+	const fetchAllCurrentSlots = async () => {
+		const allTodos = await getAllCurrentSlots(userId, 'all');
+		return allTodos;
 	};
 
-	const fetchAllNotes = async () => {
-		const allTodoLists = await db.query.notes.findMany({});
-		return allTodoLists;
-	};
-
-	const fetchAllTaskSlots = async () => {
-		const allTodoLists = await db.query.taskSlots.findMany({
-			with: {
-				todoList: {
-					with: {
-						todos: true
-					}
-				},
-				note: true
-			},
-			where: (taskSlots, { eq }) => eq(taskSlots.user_id, userId)
-		});
-		return allTodoLists;
+	const fetchAllArchivedSlots = async () => {
+		const allTodos = await getAllArchivedSlots(userId, 'all');
+		return allTodos;
 	};
 
 	return {
 		userId: session.user.userId,
 		username: session.user.username,
-		allTaskSlots: fetchAllTaskSlots()
+		allCurrent: fetchAllCurrentSlots(),
+		allArchived: fetchAllArchivedSlots()
 	};
 };
 

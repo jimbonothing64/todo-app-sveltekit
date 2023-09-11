@@ -43,7 +43,8 @@ export const getAllSlots = async (userId: string, type: 'notes' | 'todos' | 'all
 				with: {
 					note: true
 				},
-				where: (taskSlots, { eq }) => eq(taskSlots.user_id, userId)
+				where: (taskSlots, { and, eq, isNotNull }) =>
+					and(eq(taskSlots.user_id, userId), isNotNull(taskSlots.note_id))
 			});
 			break;
 		case 'todos':
@@ -53,8 +54,7 @@ export const getAllSlots = async (userId: string, type: 'notes' | 'todos' | 'all
 						with: {
 							todos: true
 						}
-					},
-					note: true
+					}
 				},
 				where: (taskSlots, { eq }) => eq(taskSlots.user_id, userId)
 			});
@@ -85,8 +85,11 @@ export const getAllCurrentSlots = async (userId: string, type: 'notes' | 'todos'
 				with: {
 					note: true
 				},
-				where: (taskSlots, { and, eq }) =>
-					and(eq(taskSlots.user_id, userId), eq(taskSlots.archived, false))
+				where: (taskSlots, { and, eq, isNotNull }) =>
+					and(
+						and(eq(taskSlots.user_id, userId), isNotNull(taskSlots.note_id)),
+						eq(taskSlots.archived, false)
+					)
 			});
 			break;
 		case 'todos':
@@ -96,11 +99,13 @@ export const getAllCurrentSlots = async (userId: string, type: 'notes' | 'todos'
 						with: {
 							todos: true
 						}
-					},
-					note: true
+					}
 				},
-				where: (taskSlots, { and, eq }) =>
-					and(eq(taskSlots.user_id, userId), eq(taskSlots.archived, false))
+				where: (taskSlots, { and, eq, isNotNull }) =>
+					and(
+						and(eq(taskSlots.user_id, userId), isNotNull(taskSlots.todo_list_id)),
+						eq(taskSlots.archived, false)
+					)
 			});
 			break;
 		case 'all':
@@ -130,8 +135,11 @@ export const getAllArchivedSlots = async (userId: string, type: 'notes' | 'todos
 				with: {
 					note: true
 				},
-				where: (taskSlots, { and, eq }) =>
-					and(eq(taskSlots.user_id, userId), eq(taskSlots.archived, true))
+				where: (taskSlots, { and, eq, isNotNull }) =>
+					and(
+						and(eq(taskSlots.user_id, userId), isNotNull(taskSlots.note_id)),
+						eq(taskSlots.archived, true)
+					)
 			});
 			break;
 		case 'todos':
@@ -141,11 +149,13 @@ export const getAllArchivedSlots = async (userId: string, type: 'notes' | 'todos
 						with: {
 							todos: true
 						}
-					},
-					note: true
+					}
 				},
-				where: (taskSlots, { and, eq }) =>
-					and(eq(taskSlots.user_id, userId), eq(taskSlots.archived, true))
+				where: (taskSlots, { and, eq, isNotNull }) =>
+					and(
+						and(eq(taskSlots.user_id, userId), isNotNull(taskSlots.todo_list_id)),
+						eq(taskSlots.archived, true)
+					)
 			});
 			break;
 		case 'all':

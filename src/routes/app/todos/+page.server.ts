@@ -17,21 +17,21 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!session) throw redirect(302, '/login');
 	const userId = session.user.userId;
 
-	const fetchAllCurrentNotes = async () => {
-		const allNotes = await getAllCurrentSlots(userId, 'notes');
-		return allNotes;
+	const fetchAllCurrentTodoLists = async () => {
+		const allTodos = await getAllCurrentSlots(userId, 'todos');
+		return allTodos;
 	};
 
-	const fetchAllArchivedNotes = async () => {
-		const allNotes = await getAllArchivedSlots(userId, 'notes');
-		return allNotes;
+	const fetchAllArchivedTodoLists = async () => {
+		const allTodos = await getAllArchivedSlots(userId, 'todos');
+		return allTodos;
 	};
 
 	return {
 		// userId: session.user.userId,
 		// username: session.user.username,
-		allCurrent: fetchAllCurrentNotes(),
-		allArchived: fetchAllArchivedNotes()
+		allCurrent: fetchAllCurrentTodoLists(),
+		allArchived: fetchAllArchivedTodoLists()
 	};
 };
 

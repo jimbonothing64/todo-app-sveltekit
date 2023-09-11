@@ -1,16 +1,17 @@
 <script lang="ts">
 	import NewSlotItemForm from '$lib/components/NewSlotItemForm.svelte';
-	import SlotCard from '$lib/components/slots/SlotCard.svelte';
-	import ArchivedSlotCard from '$lib/components/slots/ArchivedSlotCard.svelte';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
-	import NoteContents from '$lib/components/notes/NoteContents.svelte';
+	import SlotCard from '$lib/components/slots/SlotCard.svelte';
+	import ArchivedSlotCard from '$lib/components/slots/ArchivedSlotCard.svelte';
+	import TodoListContents from '$lib/components/todo-list/TodoListContents.svelte';
 	export let data: PageData;
 
 	type editState = 'editing' | 'loading' | null;
 
 	let editingtaskSlot = {};
 	let editForm: HTMLFormElement | undefined;
+	let editNoteInput: HTMLInputElement | undefined;
 	let editing: editState = null;
 
 	$: allCurrent = data.allCurrent;
@@ -40,16 +41,17 @@
 <div class="flex pt-10 flex-wrap place-content-center gap-3 md:m-5">
 	{#each allCurrent as taskSlot (taskSlot.id)}
 		<SlotCard on:click={() => handleNoteClick(taskSlot)}>
-			<NoteContents {...taskSlot.note} />
+			<TodoListContents {...taskSlot.todoList} />
 		</SlotCard>
 	{/each}
 
 	{#each allArchived as taskSlot (taskSlot.id)}
 		<ArchivedSlotCard on:click={() => handleNoteClick(taskSlot)}>
-			<NoteContents {...taskSlot.note} />
+			<TodoListContents {...taskSlot.todoList} />
 		</ArchivedSlotCard>
 	{/each}
 
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	{#if editing && editingtaskSlot}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -66,19 +68,20 @@
 				<form bind:this={editForm} use:enhance method="POST" action="?/updateSlot">
 					<div class="flex flex-row justify-between">
 						<input
-							bind:value={editingtaskSlot.note.title}
+							bind:value={editingtaskSlot.todoList.title}
 							name="title"
 							class=" focus:outline-none text-2xl rounded-3xl font-bold tracking-tight"
 						/>
 					</div>
 					<textarea
-						bind:value={editingtaskSlot.note.text}
+						bind:this={editNoteInput}
+						bind:value={editingtaskSlot.todoList.text}
 						use:focus
 						name="text"
 						class="focus:outline-none rounded-3xl resize-none w-full h-72 md:h-96"
 					/>
 					<input type="hidden" name="slotId" value={editingtaskSlot.id} />
-					<input type="hidden" name="noteId" value={editingtaskSlot.note?.id} />
+					<input type="hidden" name="noteId" value={editingtaskSlot.todoList?.id} />
 					<div class="flex flex-row justify-between">
 						<div class="flex rounded-xl hover:bg-gray-300 p-2">
 							<input
