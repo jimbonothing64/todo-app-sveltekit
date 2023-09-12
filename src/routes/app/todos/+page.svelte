@@ -19,9 +19,6 @@
 	};
 </script>
 
-<div class="flex justify-center">
-	<NewSlotItemForm />
-</div>
 <div class="flex pt-10 flex-wrap place-content-center gap-3 md:m-5">
 	{#each allCurrent as taskSlot (taskSlot.id)}
 		<SlotCard on:click={() => handleNoteClick(taskSlot)}>

@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { todoLists, todos, taskSlots, notes } from '$lib/server/schema';
 import type { NewSlotType, Todo } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { deleteSlot, getAllArchivedSlots, getAllCurrentSlots } from '$lib/server/taskSlot.db';
 import { parseTodosForm } from '$lib/validate/todo';
 
@@ -40,7 +40,7 @@ export const actions: Actions = {
 		const toInsert = {
 			title
 		};
-		if (!title) return { success: false };
+		if (!title) return fail(400, { success: false });
 
 		if (type === 'todo list') {
 			const newTodoLists = await db.insert(todoLists).values(toInsert);

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Todo, TodoList } from '$lib/types';
+	import type { Todo } from '$lib/types';
 	import TodoItem from '$lib/components/todo-list/TodoItem.svelte';
 	export let showTitle = true;
 	export let todos: Array<Todo> = [];
@@ -38,7 +38,7 @@
 	/>
 {/if}
 <ul class="p-4">
-	{#each todos as todo}
+	{#each todos as todo (todo.ordering)}
 		<li><TodoItem {...todo} /></li>
 	{/each}
 	{#each newTodos as todo}
