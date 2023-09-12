@@ -10,7 +10,7 @@ import {
 	getAllCurrentSlots,
 	userCanMutate
 } from '$lib/server/taskSlot.db';
-import { noteSlotFormSchema } from '$lib/validate';
+import { noteSlotFormSchema } from '$lib/validate/note';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -42,10 +42,10 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const result = noteSlotFormSchema.safeParse(data);
 		if (!result.success) {
-			const data = {
+			const errors = {
 				fieldErrors: result.error.flatten().fieldErrors
 			};
-			return fail(400, data);
+			return fail(400, errors);
 		}
 		const { slotId, noteId, text, title, archived } = result.data;
 		const canMutate = userCanMutate(slotId, userId);

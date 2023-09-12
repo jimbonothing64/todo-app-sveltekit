@@ -10,8 +10,7 @@ import {
 	getAllCurrentSlots,
 	userCanMutate
 } from '$lib/server/taskSlot.db';
-import { noteSlotFormSchema } from '$lib/validate';
-import { parse } from '$lib/todolist.db';
+import { parseTodosForm, todoListSlotFormSchema } from '$lib/validate/todo';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -41,12 +40,18 @@ export const actions: Actions = {
 
 		const userId = session.user.userId;
 		const data = await request.formData();
-		const slotId = data.get('slotId');
-		const todoId = data.get('todoId');
-		const title = data.get('title');
-		const archived = data.get('archived') ? true : false;
-		const formTodos = parse(data, todoId);
 
+		const slotResult = todoListSlotFormSchema.safeParse(data);
+		if (!slotResult.success) {
+			const errors = {
+				fieldErrors: slotResult.error.flatten().fieldErrors
+			};
+			return fail(400, errors);
+		}
+		const { slotId, todoId, title, archived } = slotResult.data;
+		const parsedTodos = parseTodosForm(data, todoId);
+		const updatedTodos = parsedTodos.existing;
+		const newTodos = parsedTodos.new;
 		const canMutate = userCanMutate(slotId, userId);
 		if (!canMutate) {
 			return { message: 'Can only edit own notes!' };
@@ -57,9 +62,14 @@ export const actions: Actions = {
 			.set({ title })
 			.where(eq(todoLists.id, todoId));
 
+		if (newTodos.length > 0) {
+			await db.insert(todos).values(newTodos);
+		}
+
 		const resultTodos = true;
 		const queue = [];
-		for (const todo of formTodos) {
+		for (const todo of updatedTodos) {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { id, todo_list_id, ...rest } = todo;
 
 			queue.push(
@@ -85,7 +95,7 @@ export const actions: Actions = {
 		const deleteNoteId = data.get('noteId');
 		const deleteTodoListId = data.get('todoListId');
 
-		const result = await deleteSlot(delteSlotId, deleteNoteId, deleteTodoListId, todoId);
+		const result = await deleteSlot(delteSlotId, deleteNoteId, deleteTodoListId, userId);
 		const success = !!result;
 		return { success };
 	}

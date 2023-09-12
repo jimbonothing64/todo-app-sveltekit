@@ -16,7 +16,7 @@ export const todos = mysqlTable(
 		id: serial('id').primaryKey(),
 		text: varchar('name', { length: 256 }),
 		completed: boolean('completed').notNull().default(false),
-		ordering: int('ordering'),
+		ordering: int('ordering').notNull(),
 		todo_list_id: int('todo_list_id').notNull()
 	},
 	(table) => {

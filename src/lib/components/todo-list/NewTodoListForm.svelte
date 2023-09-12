@@ -3,6 +3,7 @@
 	import TodoItem from '$lib/components/todo-list/TodoItem.svelte';
 	export let showTitle = true;
 	export let todos: Array<Todo> = [];
+	let newTodos: Array<Todo> = [];
 	let newTodo: Todo = {
 		id: null,
 		ordering: todos.length,
@@ -13,10 +14,10 @@
 	const handleAddTodo = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			if (newTodo.text !== '') {
-				todos = [...todos, newTodo];
+				newTodos = [...newTodos, newTodo];
 				newTodo = {
 					id: null,
-					ordering: todos.length,
+					ordering: todos.length + newTodos.length,
 					text: '',
 					completed: false
 				};
@@ -40,17 +41,20 @@
 	{#each todos as todo}
 		<li><TodoItem {...todo} /></li>
 	{/each}
+	{#each newTodos as todo}
+		<li><TodoItem {...todo} namePrefix="new" /></li>
+	{/each}
 	<li>
 		<input
 			bind:value={newTodo.completed}
-			name="todo.{newTodo.ordering}.completed"
+			name="new.todo.{newTodo.ordering}.completed"
 			class="text-green-600"
 			type="checkbox"
 		/>
 		<input
 			bind:value={newTodo.text}
 			on:keydown|capture={handleAddTodo}
-			name="text"
+			name="new.todo.{newTodo.ordering}.text"
 			type="text"
 			autocomplete="off"
 			placeholder="Todo item..."

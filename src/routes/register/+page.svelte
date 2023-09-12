@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { registerFormSchema } from '$lib/validate';
+	import { registerFormSchema } from '$lib/validate/stories';
 	import type { ActionData, SubmitFunction } from './$types';
 	export let form: ActionData;
 	let loading = false;

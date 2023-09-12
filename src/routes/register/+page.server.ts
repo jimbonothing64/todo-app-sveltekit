@@ -1,8 +1,6 @@
 import { auth } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
-import { registerFormSchema } from '$lib/validate';
-
-import { DatabaseError } from '@planetscale/database';
+import { registerFormSchema } from '$lib/validate/stories';
 
 import type { PageServerLoad, Actions } from './$types';
 import { LuciaError } from 'lucia';

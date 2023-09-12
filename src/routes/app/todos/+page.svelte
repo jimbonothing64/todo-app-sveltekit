@@ -5,7 +5,6 @@
 	import SlotCard from '$lib/components/slots/SlotCard.svelte';
 	import ArchivedSlotCard from '$lib/components/slots/ArchivedSlotCard.svelte';
 	import TodoListContents from '$lib/components/todo-list/TodoListContents.svelte';
-	import TodoItem from '$lib/components/todo-list/TodoItem.svelte';
 	import NewTodoListForm from '$lib/components/todo-list/NewTodoListForm.svelte';
 	export let data: PageData;
 

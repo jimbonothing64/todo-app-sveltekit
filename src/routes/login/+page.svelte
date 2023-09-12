@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { loginFormSchema } from '$lib/validate';
+	import { loginFormSchema } from '$lib/validate/stories';
 	import { enhance } from '$app/forms';
 	import type { ActionData, SubmitFunction } from './$types';
 	export let form: ActionData;

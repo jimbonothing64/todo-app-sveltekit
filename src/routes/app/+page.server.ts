@@ -5,7 +5,7 @@ import type { NewSlotType, Todo } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
 import { deleteSlot, getAllArchivedSlots, getAllCurrentSlots } from '$lib/server/taskSlot.db';
-import { parse } from '$lib/todolist.db';
+import { parseTodosForm } from '$lib/validate/todo';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -46,8 +46,7 @@ export const actions: Actions = {
 			const newTodoLists = await db.insert(todoLists).values(toInsert);
 			const newTodoListid = newTodoLists.insertId;
 
-			const insertTodos = parse(data, newTodoListid);
-
+			const insertTodos = parseTodosForm(data, newTodoListid).new;
 			await db.insert(todos).values(insertTodos);
 
 			await db.insert(taskSlots).values({ todo_list_id: newTodoListid, user_id: userId });
