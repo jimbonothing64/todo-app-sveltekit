@@ -1,14 +1,5 @@
 import { relations } from 'drizzle-orm';
-import {
-	boolean,
-	index,
-	int,
-	bigint,
-	mysqlTable,
-	serial,
-	uniqueIndex,
-	varchar
-} from 'drizzle-orm/mysql-core';
+import { boolean, index, int, bigint, mysqlTable, serial, varchar } from 'drizzle-orm/mysql-core';
 
 export const todos = mysqlTable(
 	'todos',

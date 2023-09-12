@@ -1,8 +1,5 @@
 <script lang="ts">
-	import type { Note } from '$lib/types';
-	// export let newNote: Note;
-
-	let showTitle = false;
+	let showTitle = true;
 	let containerDiv: HTMLDivElement;
 
 	const handleFocus = () => {
