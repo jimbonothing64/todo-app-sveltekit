@@ -18,7 +18,6 @@
 		loading = true;
 		return async ({ result, update }) => {
 			loading = false;
-			console.log(result);
 			if (result.type === 'success') {
 				formType = 'note';
 				await update();

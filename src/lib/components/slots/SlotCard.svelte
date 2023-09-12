@@ -3,7 +3,7 @@
 <div
 	on:click
 	role="button"
-	class="max-w-sm p-6 break-words hyphens-auto bg-white border cursor-pointer border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+	class="w-72 md:w-80 p-6 break-words hyphens-auto bg-white border cursor-pointer border-gray-200 rounded-lg hover:shadow dark:bg-gray-800 dark:border-gray-700"
 >
 	<slot />
 </div>
