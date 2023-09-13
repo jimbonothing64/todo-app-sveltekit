@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	const urlKey = url.searchParams.get(DEMO_KEY);
 	if (urlKey !== DEMO_VALUE) throw redirect(302, '/');
 
-	const username = 'DemoUser' + generateRandomString(4);
+	const username = 'DemoUser_' + generateRandomString(6);
 	const password = DEMO_ACCOUNT_PASSWORD;
 
 	try {
