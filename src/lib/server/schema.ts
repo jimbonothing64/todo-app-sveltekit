@@ -53,7 +53,8 @@ export const user = mysqlTable('auth_user', {
 	id: varchar('id', {
 		length: 15 // change this when using custom user ids
 	}).primaryKey(),
-	username: varchar('username', { length: 35 }).notNull()
+	username: varchar('username', { length: 35 }).notNull(),
+	role: varchar('role', { length: 10 })
 });
 
 export const key = mysqlTable('user_key', {
