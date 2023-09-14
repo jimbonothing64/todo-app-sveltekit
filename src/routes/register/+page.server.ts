@@ -24,14 +24,15 @@ export const actions: Actions = {
 		}
 		const { username, password } = result.data;
 		try {
-			const user = await auth.createUser({
+			await auth.createUser({
 				key: {
 					providerId: 'username', // auth method
 					providerUserId: username.toLowerCase(), // unique id when using "username" auth method
 					password // hashed by Lucia
 				},
 				attributes: {
-					username
+					username,
+					role: 'user'
 				}
 			});
 		} catch (e) {

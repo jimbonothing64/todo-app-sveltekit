@@ -4,13 +4,8 @@ import { taskSlots, notes } from '$lib/server/schema';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
-import {
-	deleteSlot,
-	getAllArchivedSlots,
-	getAllCurrentSlots,
-	userCanMutate
-} from '$lib/server/taskSlot.db';
-import { noteSlotFormSchema } from '$lib/validate/note';
+import { getAllArchivedSlots, getAllCurrentSlots, userCanMutate } from '$lib/server/taskSlot.db';
+import { newNoteSlotFormSchema, noteSlotFormSchema } from '$lib/validate/note';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -34,6 +29,26 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
+	createSlot: async ({ request, locals }) => {
+		const session = await locals.auth.validate();
+		if (!session) throw redirect(302, '/login');
+		const userId = session.user.userId;
+
+		const data = await request.formData();
+		const slotResult = newNoteSlotFormSchema.safeParse(data);
+		if (!slotResult.success) {
+			const errors = {
+				fieldErrors: slotResult.error.flatten().fieldErrors
+			};
+			return fail(400, errors);
+		}
+
+		const note = slotResult.data;
+		const noteId = parseInt((await db.insert(notes).values(note)).insertId);
+		await db.insert(taskSlots).values({ note_id: noteId, user_id: userId });
+
+		return { success: true };
+	},
 	updateSlot: async ({ request, locals }) => {
 		const session = await locals.auth.validate();
 		if (!session) throw redirect(302, '/login');
@@ -58,21 +73,6 @@ export const actions: Actions = {
 			.where(eq(taskSlots.note_id, noteId));
 		const resultNote = await db.update(notes).set({ text, title }).where(eq(notes.id, noteId));
 		const success = !!resultNote && !!resultSlot;
-		return { success };
-	},
-
-	deleteSlot: async ({ request, locals }) => {
-		const session = await locals.auth.validate();
-		if (!session) throw redirect(302, '/login');
-		const userId = session.user.userId;
-
-		const data = await request.formData();
-		const delteSlotId = data.get('id');
-		const deleteNoteId = data.get('noteId');
-		const deleteTodoListId = data.get('todoListId');
-
-		const result = await deleteSlot(delteSlotId, deleteNoteId, deleteTodoListId, userId);
-		const success = !!result;
 		return { success };
 	}
 };

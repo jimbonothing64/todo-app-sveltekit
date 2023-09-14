@@ -8,6 +8,10 @@ export const todoListSlotFormSchema = zfd.formData({
 	archived: zfd.checkbox()
 });
 
+export const newTodoListSlotFormSchema = zfd.formData({
+	title: zfd.text(z.string().min(0))
+});
+
 export const todoFormSchema = zfd.formData({
 	id: zfd.numeric(),
 	todo_list_id: zfd.numeric(),
@@ -35,12 +39,23 @@ export const parseTodosForm = (data: FormData, newTodoListid: number) => {
 	const existingTodosForm = parseExistingTodos(data, newTodoListid);
 	const newTodosForm = parseNewTodos(data, newTodoListid);
 
-	type validatorFunction = typeof todoFormSchema.parse | typeof newTodoFormSchema.parse;
-	const filterValid = (todos: ReturnType<typeof parseTodos>, validator: validatorFunction) => {
+	const filterValidExisting = (todos: ReturnType<typeof parseTodos>) => {
 		const valids = [];
 		for (const todo of todos) {
 			try {
-				valids.push(validator(todo));
+				valids.push(todoFormSchema.parse(todo));
+			} catch (_) {
+				// Exclude invalid items.
+			}
+		}
+		return valids;
+	};
+
+	const filterValidNew = (todos: ReturnType<typeof parseTodos>) => {
+		const valids = [];
+		for (const todo of todos) {
+			try {
+				valids.push(newTodoFormSchema.parse(todo));
 			} catch (_) {
 				// Exclude invalid items.
 			}
@@ -49,8 +64,8 @@ export const parseTodosForm = (data: FormData, newTodoListid: number) => {
 	};
 
 	return {
-		existing: filterValid(existingTodosForm, todoFormSchema.parse),
-		new: filterValid(newTodosForm, newTodoFormSchema.parse)
+		existing: filterValidExisting(existingTodosForm),
+		new: filterValidNew(newTodosForm)
 	};
 };
 

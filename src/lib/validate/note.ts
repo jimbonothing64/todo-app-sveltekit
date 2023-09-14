@@ -8,3 +8,8 @@ export const noteSlotFormSchema = zfd.formData({
 	text: zfd.text(z.string().min(1, { message: 'Note cannot be empty' })),
 	archived: zfd.checkbox()
 });
+
+export const newNoteSlotFormSchema = zfd.formData({
+	title: zfd.text(z.string().min(0)),
+	text: zfd.text(z.string().min(1, { message: 'Note cannot be empty' }))
+});

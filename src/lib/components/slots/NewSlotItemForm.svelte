@@ -16,9 +16,11 @@
 	const handleNoteClick = () => {
 		formType = 'note';
 	};
+
+	$: action = (formType === 'note' ? '/app/notes' : '/app/todos') + '?/createSlot';
 </script>
 
-<form use:enhance={use} method="POST" action="/app?/createSlot" class="w-5/6">
+<form use:enhance={use} method="POST" {action} class="w-5/6">
 	<input type="hidden" name="type" value={formType} />
 	<div
 		class="flex flex-col dark:bg-gray-800 dark:border-gray-700 border border-gray-200 rounded-3xl shadow"

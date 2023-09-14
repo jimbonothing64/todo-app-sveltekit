@@ -12,8 +12,8 @@ export const userCanMutate = async (slotId: number, reqUserId: string) => {
 
 export const deleteSlot = async (
 	slotId: number,
-	noteId: number,
-	todoId: number,
+	noteId: number | undefined,
+	todoId: number | undefined,
 	reqUserId: string
 ) => {
 	const userMutate = await userCanMutate(slotId, reqUserId);
