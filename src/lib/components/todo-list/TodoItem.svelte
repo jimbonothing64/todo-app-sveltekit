@@ -1,10 +1,13 @@
 <script lang="ts">
+	import type { Todo } from '$lib/types';
+
 	export let id: number | null;
-	export let todo_list_id: number | null;
+	export let todo_list_id: number | null = null;
 	export let ordering: number;
 	export let completed: boolean;
 	export let text: string;
 	export let namePrefix = '';
+	// export let handleDelte: (event: KeyboardEvent, todo: Todo) => void;
 
 	const prefix = () => (namePrefix !== '' ? `${namePrefix}.` : '');
 </script>
@@ -24,6 +27,7 @@
 />
 <input
 	bind:value={text}
+	on:keydown
 	autocomplete=""
 	name="{prefix()}todo.{ordering}.text"
 	class="px-1 focus:outline-none rounded-3xl"

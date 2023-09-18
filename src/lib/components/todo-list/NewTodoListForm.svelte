@@ -26,6 +26,15 @@
 			// Form submit.
 		}
 	};
+
+	const handleDelteTodo = (event: KeyboardEvent, todo: Todo) => {
+		// console.log(event, todo);
+		if (event.key === 'Backspace') {
+			if (todos.length > 1 && todo.text.length == 1) {
+				todos = todos.filter((t) => t.id != todo.id);
+			}
+		}
+	};
 </script>
 
 {#if showTitle}
@@ -39,7 +48,7 @@
 {/if}
 <ul class="p-4">
 	{#each todos as todo (todo.ordering)}
-		<li><TodoItem {...todo} /></li>
+		<li><TodoItem {...todo} on:keydown={(e) => handleDelteTodo(e, todo)} /></li>
 	{/each}
 	{#each newTodos as todo}
 		<li><TodoItem {...todo} namePrefix="new" /></li>
