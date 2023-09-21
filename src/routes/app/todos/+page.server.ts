@@ -73,6 +73,7 @@ export const actions: Actions = {
 		const { slotId, todoId, title, archived } = slotResult.data;
 		const parsedTodos = parseTodosForm(data, todoId);
 		const updatedTodos = parsedTodos.existing;
+		const deleteTodos = parsedTodos.delete;
 		const newTodos = parsedTodos.new;
 		const canMutate = userCanMutate(slotId, userId);
 		if (!canMutate) {
@@ -100,6 +101,9 @@ export const actions: Actions = {
 					.set({ ...rest })
 					.where(eq(todos.id, id))
 			);
+		}
+		for (const todo of deleteTodos) {
+			queue.push(db.delete(todos).where(eq(todos.id, parseInt(todo.id))));
 		}
 		await Promise.all(queue);
 

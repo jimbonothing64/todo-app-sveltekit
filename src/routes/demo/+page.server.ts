@@ -35,7 +35,6 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		locals.auth.setSession(session); // set session cookie
 	} catch (e) {
 		// check for unique constraint error in user table
-		console.log(e);
 		if (e instanceof LuciaError && e.message === 'AUTH_DUPLICATE_KEY_ID') {
 			return fail(400, {
 				formErrors: ['Username already taken']

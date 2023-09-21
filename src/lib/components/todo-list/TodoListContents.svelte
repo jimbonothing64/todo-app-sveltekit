@@ -7,7 +7,6 @@
 
 	const handleTodoClick = (todo: (typeof todos)[number]) => {
 		todo.completed = !todo.completed;
-		console.log(todos);
 	};
 </script>
 

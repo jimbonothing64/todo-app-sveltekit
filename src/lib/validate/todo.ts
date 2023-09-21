@@ -65,7 +65,8 @@ export const parseTodosForm = (data: FormData, newTodoListid: number) => {
 
 	return {
 		existing: filterValidExisting(existingTodosForm),
-		new: filterValidNew(newTodosForm)
+		new: filterValidNew(newTodosForm),
+		delete: parseDelTodos(data)
 	};
 };
 
@@ -91,4 +92,17 @@ const parseTodos = (data: FormData, newTodoListid: number, prefix: string) => {
 	}
 	const insertTodos = [...newTodos.values()].map((m) => Object.fromEntries(m));
 	return insertTodos;
+};
+
+const parseDelTodos = (data: FormData) => {
+	const deleteTodos = [];
+	for (const key of data.keys()) {
+		if (key.startsWith('del.todo.id.')) {
+			const todo = {
+				id: <string>data.get(key)
+			};
+			deleteTodos.push(todo);
+		}
+	}
+	return deleteTodos;
 };
