@@ -1,9 +1,8 @@
 import { relations } from 'drizzle-orm';
 import { boolean, index, int, bigint, mysqlTable, serial, varchar } from 'drizzle-orm/mysql-core';
 import { DATABASE_TABLE_PREFIX } from '$env/static/private';
-import * as dotenv from 'dotenv';
 
-const table_prefix = (DATABASE_TABLE_PREFIX || process.env.DATABASE_TABLE_PREFIX) + '_';
+const table_prefix = DATABASE_TABLE_PREFIX + '_';
 
 export const todos = mysqlTable(
 	table_prefix + 'todos',
