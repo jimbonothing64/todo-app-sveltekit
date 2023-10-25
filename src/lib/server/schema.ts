@@ -1,8 +1,12 @@
 import { relations } from 'drizzle-orm';
 import { boolean, index, int, bigint, mysqlTable, serial, varchar } from 'drizzle-orm/mysql-core';
+import { DATABASE_TABLE_PREFIX } from '$env/static/private';
+import * as dotenv from 'dotenv';
+
+const table_prefix = (DATABASE_TABLE_PREFIX || process.env.DATABASE_TABLE_PREFIX) + '_';
 
 export const todos = mysqlTable(
-	'todos',
+	table_prefix + 'todos',
 	{
 		id: serial('id').primaryKey(),
 		text: varchar('name', { length: 256 }),
@@ -17,19 +21,19 @@ export const todos = mysqlTable(
 	}
 );
 
-export const todoLists = mysqlTable('todo_lists', {
+export const todoLists = mysqlTable(table_prefix + 'todo_lists', {
 	id: serial('id').primaryKey(),
 	title: varchar('title', { length: 256 })
 });
 
-export const notes = mysqlTable('notes', {
+export const notes = mysqlTable(table_prefix + 'notes', {
 	id: serial('id').primaryKey(),
 	title: varchar('title', { length: 256 }),
 	text: varchar('text', { length: 2048 })
 });
 
 export const taskSlots = mysqlTable(
-	'task_slots',
+	table_prefix + 'task_slots',
 	{
 		id: serial('id').primaryKey(),
 		ordering: int('ordering'),
@@ -49,7 +53,7 @@ export const taskSlots = mysqlTable(
 );
 
 // Lucia tables
-export const user = mysqlTable('auth_user', {
+export const user = mysqlTable(table_prefix + 'auth_user', {
 	id: varchar('id', {
 		length: 15 // change this when using custom user ids
 	}).primaryKey(),
@@ -57,7 +61,7 @@ export const user = mysqlTable('auth_user', {
 	role: varchar('role', { length: 10 })
 });
 
-export const key = mysqlTable('user_key', {
+export const key = mysqlTable(table_prefix + 'user_key', {
 	id: varchar('id', {
 		length: 255
 	}).primaryKey(),
@@ -69,7 +73,7 @@ export const key = mysqlTable('user_key', {
 	})
 });
 
-export const session = mysqlTable('user_session', {
+export const session = mysqlTable(table_prefix + 'user_session', {
 	id: varchar('id', {
 		length: 128
 	}).primaryKey(),
